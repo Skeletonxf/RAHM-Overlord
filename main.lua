@@ -1,10 +1,11 @@
 local typewriter = require("typewriter")
-
 local screenY = 900
 
 local background
 local startGameWriter
-
+local motionImages = {}
+local i = love.graphics.newImage("mountainVanBScaled.png")
+motionImages[1] = {i=i,iw=i:getWidth(),ih=i:getHeight()}
 function love.load()
   love.window.setMode(1500, screenY)
   -- zerobrane debugging
@@ -20,7 +21,7 @@ You want drugs. And you want them now.
 Tis The Ski-Son To Be Jolly, Fa La La La La...
   ]]
   startGameWriter.specialDelays={["."]=0.12,["-"]=0.08}
-  
+
   love.graphics.setNewFont(28)
 end
 
@@ -35,7 +36,19 @@ local collisions = {}
 function collisions.add(xPos,yPos,width,height)
   collisions[#collisions+1] = {x=xPos,y=screenY-yPos-height-100,w=width,h=height}
 end
-collisions.add(750,0,200,200)
+--collisions.add(750,0,200,200)
+
+local visuals = {}
+
+function collisions.addImage(i,x,y,w,h)
+  if i == 1 then
+    visuals[#visuals+1] = {i=motionImages[i],x=x,y=screenY-y-h-100,w=w,h=h}
+    collisions.add(x,y,w,h/3)
+    collisions.add(x+(w/5),y+(h/3),3*w/5,h/3)
+    collisions.add(x+(w/3),y+(2*h/3),w/3,h/3)
+  end
+end
+collisions.addImage(1,1050,0,200,200)
 
 local scroll = 0
 
@@ -56,10 +69,16 @@ function love.draw()
   for key, rectangle in ipairs(hurt) do
     love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
   end
-  love.graphics.setColor(0,0,0)
+  for key, image in ipairs(visuals) do
+    love.graphics.setColor(255,255,255,255)
+    love.graphics.draw(image.i.i,image.x,image.y,0,
+      image.w/motionImages[1].iw, image.h/motionImages[1].ih)
+  end
   for key, rectangle in ipairs(collisions) do
+    love.graphics.setColor(0,0,0,50)
     love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
   end
+  love.graphics.setColor(0,0,0,255)
   love.graphics.rectangle("line",player.x,player.y,player.w,player.h)
   love.graphics.pop()
 end
@@ -67,7 +86,7 @@ end
 -- dt is time passed since last frame in seconds
 function love.update(dt)
   startGameWriter:update(dt)
-  
+
   if dt > 0.5 then return end
 
   if love.keyboard.isDown(",") then
