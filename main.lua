@@ -8,6 +8,7 @@ function love.load()
   background = love.graphics.newImage("VanB.png")
   if arg[#arg] == "-debug" then require("mobdebug").start() end
   love.graphics.setLineWidth(5)
+  love.window.setTitle("Tour of the Americas")
 end
 
 local hurt = {}
@@ -31,8 +32,8 @@ function love.draw()
   -- motionless drawing
   love.graphics.setColor(255,255,255)
   love.graphics.draw(background)
-  
-  love.graphics.print("Overlord")
+  love.graphics.setColor(0,0,0)
+  love.graphics.print("Overlord",5,5)
 
   -- moving screen drawing
   love.graphics.push()
@@ -94,13 +95,13 @@ function love.update(dt)
     player.x = player.x + 450*dt
   end
 
-  if player.y <= 650 and (not playerCanJump) then
+  if player.y <= 650 and (not playerCanJump) and (not playerOnRectangle) then
     player.dy = player.dy - 250*dt
   else
     if not playerOnRectangle then
       player.y = 650
-      player.dy = 0
     end
+    player.dy = 0
   end
 
   for key, collision in ipairs(collisions) do
@@ -121,7 +122,7 @@ function love.update(dt)
         end
 
         if differenceBetweenTopOfRectangle < 60 then
-          player.y = collision.y - player.h
+          player.y = collision.y - player.h + 1
           player.dy = 0
           -- TODO fix jerking
         else
