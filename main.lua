@@ -1,5 +1,12 @@
-function love.load()
+local example = require("example")
+local exampleClass = require("exampleClasses")
 
+local objectExample
+
+function love.load()
+	objectExample = exampleClass.new()
+	example.someUsefulThing()
+	objectExample:sayHi()
 end
 
 function love.draw()
