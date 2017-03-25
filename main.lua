@@ -32,14 +32,18 @@ end
 local visuals = {}
 
 local backgrounds = {}
+backgrounds[1] = love.graphics.newImage("VanB.png")
+backgrounds[2] = love.graphics.newImage("SanFranB.png")
+backgrounds[3] = love.graphics.newImage("ArizonaB.png")
+local current = 1
 function backgrounds.nextBackground()
-  background = love.graphics.newImage("SanFranB.png")
+  current = current + 1
+  background = backgrounds[current]
 end
 
 function love.load()
   love.window.setMode(1500, screenY)
   -- zerobrane debugging
-  background = love.graphics.newImage("VanB.png")
   if arg[#arg] == "-debug" then require("mobdebug").start() end
   love.graphics.setLineWidth(5)
   love.window.setTitle("Tour of the Americas")
@@ -47,6 +51,8 @@ function love.load()
   startGameWriter.specialDelays={["."]=0.12,["-"]=0.08}
   love.graphics.setNewFont(28)
   game.giveTables(collisions, player, backgrounds, hurt)
+  background = backgrounds[1]
+  current = 1
 end
 
 
@@ -92,21 +98,40 @@ collisions.addImage(3,3800,0,300,300)
 collisions.addImage(2,4300,0,100,600)
 collisions.addImage(3,4600,0,300,200)
 collisions.addImage(2,5100,0,100,500)
-for i = 1, 100 do
+collisions.addImage(3,5400,0,250,200)
+collisions.addImage(3,5700,0,150,500)
+collisions.addImage(3,6000,0,150,800)
+collisions.addImage(2,6300,0,100,1100)
+collisions.addImage(3,6500,0,115,300)
+collisions.addImage(2,6850,0,150,400)
+collisions.addImage(3,7005,0,400,150)
+collisions.addImage(3,7005,0,400,150)
+for i = 1, 25 do
   local w = math.floor(50*love.math.random(2,3))
-  local x = 10000 + i*550 + love.math.random(-50,50) + w
+  local x = 7500 + i*550 + love.math.random(-50,50) + w
   local h = math.floor(50*love.math.random(1,4))
   collisions.addImage(4,x,0,w,h)
 end
+local h = 250
+local w = 100
+collisions.addImage(4,12400,0,w,200)
+collisions.addImage(4,14150,0,w,h)
+collisions.addImage(4,14800,0,w,h)
+collisions.addImage(4,17850,0,w,h)
+collisions.addImage(4,19400,0,w,h)
+collisions.addImage(4,21250,0,w,h)
 
---collisions.addImage(4,1500,0,200,500)
+local runGame = true
+local alive = true
 
 function love.draw()
   -- motionless drawing
   love.graphics.setColor(255,255,255)
   love.graphics.draw(background)
   love.graphics.setColor(0,0,0)
-  love.graphics.printf(startGameWriter:getText() or "",0,0,1500)
+  love.graphics.printf(startGameWriter:getText() or "",0,22,1500)
+
+  love.graphics.print(math.floor(player.x) .. " " .. tostring(alive),0,-2)
 
   -- moving screen drawing
   love.graphics.push()
@@ -125,7 +150,7 @@ function love.draw()
       love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
     end
   end
-  love.graphics.setColor(255,0,25)
+  love.graphics.setColor(255,0,0,25)
   for key, rectangle in ipairs(hurt) do
     if rectangle.x > game.scroll-750 and rectangle.x < game.scroll+1500 then
       love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
@@ -135,12 +160,20 @@ function love.draw()
   love.graphics.rectangle("line",player.x,player.y,player.w,player.h)
   love.graphics.pop()
 end
-
 -- dt is time passed since last frame in seconds
 function love.update(dt)
-  startGameWriter:update(dt)
-
   if dt > 0.5 then return end
-
-  game.update(dt)
+  startGameWriter:update(dt)
+  if runGame then
+    alive = game.update(dt)
+    if alive == nil then alive = true end
+    if alive == "YOU DIED" then
+      runGame = false
+    elseif alive == "CACTI EVEN HURT OVERLOARDS" then
+      runGame = false
+    end
+  end
+  if not alive then
+    runGame = false
+  end
 end

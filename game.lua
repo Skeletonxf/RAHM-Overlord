@@ -15,7 +15,7 @@ end
 local scroll = 0
 local scrollRate = 50
 
-local jumpPhases = {3000,10000000000000000000}
+local jumpPhases = {3000,7500,10000000000000000000}
 local jumps = 0
 
 function game.update(dt)
@@ -25,12 +25,8 @@ function game.update(dt)
     scroll = scroll - 600*dt
   else
     if not love.keyboard.isDown("o") then
-      scroll = scroll + scrollRate*dt
-    end
-    if scrollRate < 300 then
-      scrollRate = scrollRate + dt*150
-    else
-      scrollRate = scrollRate + dt*5
+      scrollRate = (300+(((scroll^(1/2))+100)))*dt
+      scroll = scroll + scrollRate --Rate*dt
     end
   end
   game.scroll = scroll
@@ -57,11 +53,13 @@ function game.update(dt)
     end
   end
 
-  for key, hurt in ipairs(hurt) do
-    if ((player.y + player.h) > hurt.y) then
-      -- player vertically in line with a collision
-      if ((player.x + player.w) > hurt.x and player.x < (hurt.x + hurt.w)) then
-        error("CACTI EVEN HURT OVERLOARDS")
+  if not love.keyboard.isDown("o") then
+    for key, hurt in ipairs(hurt) do
+      if ((player.y + player.h) > hurt.y) then
+        -- player vertically in line with a collision
+        if ((player.x + player.w) > hurt.x and player.x < (hurt.x + hurt.w)) then
+          return "CACTI EVEN HURT OVERLOARDS"
+        end
       end
     end
   end
@@ -75,10 +73,10 @@ function game.update(dt)
     right = false
   end
   if left then
-    player.x = player.x - 450*dt
+    player.x = player.x - 550*dt
   end
   if right then
-    player.x = player.x + 450*dt
+    player.x = player.x + 550*dt
   end
 
   if player.y <= 650 and (not playerCanJump) and (not playerOnRectangle) then
@@ -129,7 +127,7 @@ function game.update(dt)
   end
 
   if canMovePlayerRight and (not left) then
-    player.x = player.x + scrollRate*dt
+    player.x = player.x + scrollRate
   end
 
   if love.keyboard.isDown("w") and playerCanJump then
@@ -145,7 +143,7 @@ function game.update(dt)
   end
 
   if player.x < scroll then
-    error("WIP YOU DIED")
+    return "YOU DIED"
   end
 end
 return game
