@@ -2,7 +2,7 @@ local typewriter = require("typewriter")
 local game = require("game")
 local screenY = 900
 
-local player = {x=100,h=150,w=80,y=300,dy=0}
+local player = {x=1000,h=150,w=80,y=300,dy=0}
 
 local background
 local startGameWriter
@@ -69,9 +69,10 @@ collisions.addImage(1,2750,0,150,250)
 collisions.addImage(2,3000,0,100,400)
 collisions.addImage(3,3300,0,100,200)
 collisions.addImage(2,3500,0,100,400)
-collisions.addImage(3,3800,0,300,200)
-collisions.addImage(2,4200,0,100,600)
-
+collisions.addImage(3,3800,0,300,300)
+collisions.addImage(2,4300,0,100,600)
+collisions.addImage(3,4600,0,300,200)
+collisions.addImage(2,5100,0,100,500)
 
 function love.draw()
   -- motionless drawing

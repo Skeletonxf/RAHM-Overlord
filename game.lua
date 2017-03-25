@@ -119,6 +119,10 @@ function game.update(dt)
   player.y = player.y - player.dy
   player.dy = player.dy * 0.95
 
+  if love.keyboard.isDown("o") then
+    player.x = scroll + 750
+  end
+
   if player.x < scroll then
     error("WIP YOU DIED")
   end
