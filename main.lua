@@ -3,15 +3,21 @@ local exampleClass = require("exampleClasses")
 
 local objectExample
 
+local screenY = 900
+
 function love.load()
 	objectExample = exampleClass.new()
 	example.someUsefulThing()
 	objectExample:sayHi()
-	love.window.setMode(1500, 900)
+	love.window.setMode(1500, screenY)
 end
 
 local rectangles = {}
-rectangles[1] = {x1=150,y1=150,w=50,h=50}
+-- add a rectangle with x and y being bottom left position in screen
+function rectangles.add(xPos,yPos,width,height)
+	rectangles[#rectangles+1] = {x=xPos,y=screenY-yPos-height,w=width,h=height}
+end
+rectangles.add(150,0,50,100)
 
 local scroll = 0
 
@@ -22,8 +28,9 @@ function love.draw()
 	-- moving screen drawing
 	love.graphics.push()
 	love.graphics.translate(-scroll,0)
-	for key, rectangle in pairs(rectangles) do
-		love.graphics.rectangle("line",rectangle.x1,rectangle.y1,rectangle.w,rectangle.h)
+	-- ipairs skips the hash parts of the table and just does the numerical indexes
+	for key, rectangle in ipairs(rectangles) do
+		love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
 	end
 	love.graphics.pop()
 end
