@@ -1,17 +1,13 @@
-local example = require("example")
-local exampleClass = require("exampleClasses")
-
-local objectExample
-
 local screenY = 900
 
+local background
+
 function love.load()
-  objectExample = exampleClass.new()
-  example.someUsefulThing()
-  objectExample:sayHi()
   love.window.setMode(1500, screenY)
   -- zerobrane debugging
+  background = love.graphics.newImage("VanB.png")
   if arg[#arg] == "-debug" then require("mobdebug").start() end
+  love.graphics.setLineWidth(5)
 end
 
 local hurt = {}
@@ -33,6 +29,9 @@ local player = {x=100,h=150,w=80,y=300,dy=0}
 
 function love.draw()
   -- motionless drawing
+  love.graphics.setColor(255,255,255)
+  love.graphics.draw(background)
+  
   love.graphics.print("Overlord")
 
   -- moving screen drawing
@@ -43,7 +42,7 @@ function love.draw()
   for key, rectangle in ipairs(hurt) do
     love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
   end
-  love.graphics.setColor(255,255,255)
+  love.graphics.setColor(0,0,0)
   for key, rectangle in ipairs(collisions) do
     love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
   end
