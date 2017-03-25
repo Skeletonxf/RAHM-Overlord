@@ -58,6 +58,14 @@ function collisions.addImage(i,x,y,w,h)
     collisions.add(x,y,w,h)
   end
 end
+
+love.math.setRandomSeed(12345)
+for i = 1, 10 do
+  local w = math.floor(50*love.math.random(2,7))
+  local x = -800 + i*300 + w
+  local h = math.floor(50*love.math.random(3,9))
+  collisions.addImage(1,x,0,h,w)
+end
 collisions.addImage(1,1050,0,200,200)
 collisions.addImage(1,1350,0,100,150)
 collisions.addImage(1,1550,0,250,450)

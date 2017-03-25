@@ -22,7 +22,9 @@ function game.update(dt)
   elseif love.keyboard.isDown(".") then
     scroll = scroll - 600*dt
   else
-    scroll = scroll + scrollRate*dt
+    if not love.keyboard.isDown("o") then
+      scroll = scroll + scrollRate*dt
+    end
     if scrollRate < 300 then
       scrollRate = scrollRate + dt*150
     else
@@ -110,7 +112,7 @@ function game.update(dt)
       end
     end
   end
-  
+
   if love.keyboard.isDown("w") and playerCanJump then
     player.dy = 70
     playerIsJumping = true
