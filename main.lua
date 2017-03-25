@@ -9,6 +9,10 @@ local startGameWriter
 local motionImages = {}
 local i = love.graphics.newImage("mountainVanBScaled.png")
 motionImages[1] = {i=i,iw=i:getWidth(),ih=i:getHeight()}
+i = love.graphics.newImage("skyscaperTall.png")
+motionImages[2] = {i=i,iw=i:getWidth(),ih=i:getHeight()}
+i = love.graphics.newImage("skyscaperWide.png")
+motionImages[3] = {i=i,iw=i:getWidth(),ih=i:getHeight()}
 
 local hurt = {}
 -- add a rectangle with x and y being bottom left position in screen
@@ -21,9 +25,12 @@ local collisions = {}
 function collisions.add(xPos,yPos,width,height)
   collisions[#collisions+1] = {x=xPos,y=screenY-yPos-height-100,w=width,h=height}
 end
---collisions.add(750,0,200,200)
-
 local visuals = {}
+
+local backgrounds = {}
+function backgrounds.nextBackground()
+  background = love.graphics.newImage("SanFranB.png")
+end
 
 function love.load()
   love.window.setMode(1500, screenY)
@@ -32,17 +39,10 @@ function love.load()
   if arg[#arg] == "-debug" then require("mobdebug").start() end
   love.graphics.setLineWidth(5)
   love.window.setTitle("Tour of the Americas")
-  startGameWriter = typewriter.new[[
-  You are an overlord from the planet It's the year 2050. Memes have become the world currency, Donald Trump has entered his fifth term as president. There is snow way you can let this happen so you try taking over the world.
-
-You want drugs. And you want them now.
-
-Tis The Ski-Son To Be Jolly, Fa La La La La...
-  ]]
+  startGameWriter = typewriter.new(require("gametext"))
   startGameWriter.specialDelays={["."]=0.12,["-"]=0.08}
-
   love.graphics.setNewFont(28)
-  game.giveTables(collisions, player)
+  game.giveTables(collisions, player, backgrounds)
 end
 
 
@@ -53,8 +53,25 @@ function collisions.addImage(i,x,y,w,h)
     collisions.add(x+(w/5),y+(h/3),3*w/5,h/3)
     collisions.add(x+(w/3),y+(2*h/3),w/3,h/3)
   end
+  if i == 2 or i == 3 then
+    visuals[#visuals+1] = {i=motionImages[i],x=x,y=screenY-y-h-100,w=w,h=h}
+    collisions.add(x,y,w,h)
+  end
 end
 collisions.addImage(1,1050,0,200,200)
+collisions.addImage(1,1350,0,100,150)
+collisions.addImage(1,1550,0,250,450)
+collisions.addImage(1,1700,0,100,350)
+collisions.addImage(1,1950,0,200,550)
+collisions.addImage(1,2450,0,250,550)
+collisions.addImage(1,2650,0,100,350)
+collisions.addImage(1,2750,0,150,250)
+collisions.addImage(2,3000,0,100,400)
+collisions.addImage(3,3300,0,100,200)
+collisions.addImage(2,3500,0,100,400)
+collisions.addImage(3,3800,0,300,200)
+collisions.addImage(2,4200,0,100,600)
+
 
 function love.draw()
   -- motionless drawing
@@ -74,7 +91,7 @@ function love.draw()
   for key, image in ipairs(visuals) do
     love.graphics.setColor(255,255,255,255)
     love.graphics.draw(image.i.i,image.x,image.y,0,
-      image.w/motionImages[1].iw, image.h/motionImages[1].ih)
+      image.w/image.i.iw, image.h/image.i.ih)
   end
   for key, rectangle in ipairs(collisions) do
     love.graphics.setColor(0,0,0,50)
