@@ -13,7 +13,15 @@ function love.load()
   love.graphics.setLineWidth(5)
   love.window.setTitle("Tour of the Americas")
   startGameWriter = typewriter.new[[
+  You are an overlord from the planet It's the year 2050. Memes have become the world currency, Donald Trump has entered his fifth term as president. There is snow way you can let this happen so you try taking over the world.
+
+You want drugs. And you want them now.
+
+Tis The Ski-Son To Be Jolly, Fa La La La La...
   ]]
+  startGameWriter.specialDelays={["."]=0.12,["-"]=0.08}
+  
+  love.graphics.setNewFont(28)
 end
 
 local hurt = {}
@@ -38,7 +46,7 @@ function love.draw()
   love.graphics.setColor(255,255,255)
   love.graphics.draw(background)
   love.graphics.setColor(0,0,0)
-  love.graphics.print("Overlord",5,5)
+  love.graphics.printf(startGameWriter:getText() or "",0,0,1500)
 
   -- moving screen drawing
   love.graphics.push()
@@ -58,6 +66,8 @@ end
 
 -- dt is time passed since last frame in seconds
 function love.update(dt)
+  startGameWriter:update(dt)
+  
   if dt > 0.5 then return end
 
   if love.keyboard.isDown(",") then
