@@ -14,7 +14,7 @@ local classTable = {}
 
 function classTable.new()
 	local object = {}
-	setmetatable(object,classTable)
+	setmetatable(object,classMetaTable)
 	return object
 end
 
