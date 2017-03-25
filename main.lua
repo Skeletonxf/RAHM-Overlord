@@ -1,6 +1,9 @@
+local typewriter = require("typewriter")
+
 local screenY = 900
 
 local background
+local startGameWriter
 
 function love.load()
   love.window.setMode(1500, screenY)
@@ -9,6 +12,8 @@ function love.load()
   if arg[#arg] == "-debug" then require("mobdebug").start() end
   love.graphics.setLineWidth(5)
   love.window.setTitle("Tour of the Americas")
+  startGameWriter = typewriter.new[[
+  ]]
 end
 
 local hurt = {}
