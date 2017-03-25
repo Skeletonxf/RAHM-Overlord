@@ -23,7 +23,7 @@ local hurt = {}
 function hurt.add(xPos,yPos,width,height)
   hurt[#hurt+1] = {x=xPos,y=screenY-yPos-height-100,w=width,h=height}
 end
-hurt.add(550,0,200,400)
+--hurt.add(550,0,200,400)
 
 local collisions = {}
 function collisions.add(xPos,yPos,width,height)
@@ -46,7 +46,7 @@ function love.load()
   startGameWriter = typewriter.new(require("gametext"))
   startGameWriter.specialDelays={["."]=0.12,["-"]=0.08}
   love.graphics.setNewFont(28)
-  game.giveTables(collisions, player, backgrounds)
+  game.giveTables(collisions, player, backgrounds, hurt)
 end
 
 
@@ -63,7 +63,10 @@ function collisions.addImage(i,x,y,w,h)
   end
   if i == 4 then
     visuals[#visuals+1] = {i=motionImages[i],x=x,y=screenY-y-h-100,w=w,h=h}
-    hurt.add(x,y,w,h)
+    hurt.add(x+((5*w)/12),y,w/4,(23*h)/24)
+    hurt.add(x+(w/12),y+((15*h)/48),(4*w)/5,h/18)
+    hurt.add(x+((25*h)/72),y+((5*h)/24),w/12,h/8)
+    hurt.add(x+((w)/18),y+((5*h)/12),w/5,h/5)
   end
 end
 
@@ -89,13 +92,14 @@ collisions.addImage(3,3800,0,300,300)
 collisions.addImage(2,4300,0,100,600)
 collisions.addImage(3,4600,0,300,200)
 collisions.addImage(2,5100,0,100,500)
-for i = 1, 10000 do
+for i = 1, 100 do
   local w = math.floor(50*love.math.random(2,3))
-  local x = 10000 + i*400 + w
+  local x = 10000 + i*550 + love.math.random(-50,50) + w
   local h = math.floor(50*love.math.random(1,4))
   collisions.addImage(4,x,0,w,h)
 end
 
+--collisions.addImage(4,1500,0,200,500)
 
 function love.draw()
   -- motionless drawing
@@ -108,12 +112,6 @@ function love.draw()
   love.graphics.push()
   love.graphics.translate(-game.scroll,0)
   -- ipairs skips the hash parts of the table and just does the numerical indexes
-  love.graphics.setColor(255,0,0)
-  for key, rectangle in ipairs(hurt) do
-    if rectangle.x > game.scroll-750 and rectangle.x < game.scroll+1500 then
-      love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
-    end
-  end
   love.graphics.setColor(255,255,255,255)
   for key, image in ipairs(visuals) do
     if image.x > game.scroll-750 and image.x < game.scroll+1500 then
@@ -123,6 +121,12 @@ function love.draw()
   end
   love.graphics.setColor(0,0,0,50)
   for key, rectangle in ipairs(collisions) do
+    if rectangle.x > game.scroll-750 and rectangle.x < game.scroll+1500 then
+      love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
+    end
+  end
+  love.graphics.setColor(255,0,25)
+  for key, rectangle in ipairs(hurt) do
     if rectangle.x > game.scroll-750 and rectangle.x < game.scroll+1500 then
       love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
     end

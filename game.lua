@@ -3,11 +3,13 @@ local game = {}
 local collisions
 local player
 local backgrounds
+local hurt
 
-function game.giveTables(c, p, b)
+function game.giveTables(c, p, b, h)
   collisions = c
   player = p
   backgrounds = b
+  hurt = h
 end
 
 local scroll = 0
@@ -51,6 +53,15 @@ function game.update(dt)
           playerCanJump = true
           playerOnRectangle = true
         end
+      end
+    end
+  end
+
+  for key, hurt in ipairs(hurt) do
+    if ((player.y + player.h) > hurt.y) then
+      -- player vertically in line with a collision
+      if ((player.x + player.w) > hurt.x and player.x < (hurt.x + hurt.w)) then
+        error("CACTI EVEN HURT OVERLOARDS")
       end
     end
   end
@@ -116,7 +127,7 @@ function game.update(dt)
       end
     end
   end
-  
+
   if canMovePlayerRight and (not left) then
     player.x = player.x + scrollRate*dt
   end
