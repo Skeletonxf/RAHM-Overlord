@@ -79,6 +79,8 @@ function game.update(dt)
     player.dy = 0
   end
 
+  local canMovePlayerRight = true
+
   if not love.keyboard.isDown("o") then
     for key, collision in ipairs(collisions) do
       if ((player.y + player.h) > collision.y) then
@@ -102,15 +104,21 @@ function game.update(dt)
             player.dy = 0
             -- TODO fix jerking
           else
-            if gapOnLeftSide < 10 then
+            if gapOnLeftSide < collision.w/2 then
               player.x = collision.x - player.w
-            elseif gapOnRightSide < 10 then
+              canMovePlayerRight = false
+            elseif gapOnRightSide < collision.w/2 then
               player.x = collision.x + collision.w
+              canMovePlayerRight = false
             end
           end
         end
       end
     end
+  end
+  
+  if canMovePlayerRight and (not left) then
+    player.x = player.x + scrollRate*dt
   end
 
   if love.keyboard.isDown("w") and playerCanJump then

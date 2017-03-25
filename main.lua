@@ -7,12 +7,16 @@ local player = {x=1000,h=150,w=80,y=300,dy=0}
 local background
 local startGameWriter
 local motionImages = {}
-local i = love.graphics.newImage("mountainVanBScaled.png")
-motionImages[1] = {i=i,iw=i:getWidth(),ih=i:getHeight()}
-i = love.graphics.newImage("skyscaperTall.png")
-motionImages[2] = {i=i,iw=i:getWidth(),ih=i:getHeight()}
-i = love.graphics.newImage("skyscaperWide.png")
-motionImages[3] = {i=i,iw=i:getWidth(),ih=i:getHeight()}
+
+local function addImage(file)
+  local i = love.graphics.newImage(file)
+  motionImages[#motionImages+1] = {i=i,iw=i:getWidth(),ih=i:getHeight()}
+end
+addImage("mountainVanBScaled.png")
+addImage("skyscaperTall.png")
+addImage("skyscaperWide.png")
+addImage("cactus.png")
+addImage("cactusBig.png")
 
 local hurt = {}
 -- add a rectangle with x and y being bottom left position in screen
@@ -57,14 +61,18 @@ function collisions.addImage(i,x,y,w,h)
     visuals[#visuals+1] = {i=motionImages[i],x=x,y=screenY-y-h-100,w=w,h=h}
     collisions.add(x,y,w,h)
   end
+  if i == 4 then
+    visuals[#visuals+1] = {i=motionImages[i],x=x,y=screenY-y-h-100,w=w,h=h}
+    hurt.add(x,y,w,h)
+  end
 end
 
 love.math.setRandomSeed(12345)
 for i = 1, 10 do
-  local w = math.floor(50*love.math.random(2,7))
+  local h = math.floor(50*love.math.random(2,7))
+  local w = math.floor(50*love.math.random(3,9))
   local x = -800 + i*300 + w
-  local h = math.floor(50*love.math.random(3,9))
-  collisions.addImage(1,x,0,h,w)
+  collisions.addImage(1,x,0,w,h)
 end
 collisions.addImage(1,1050,0,200,200)
 collisions.addImage(1,1350,0,100,150)
@@ -81,6 +89,13 @@ collisions.addImage(3,3800,0,300,300)
 collisions.addImage(2,4300,0,100,600)
 collisions.addImage(3,4600,0,300,200)
 collisions.addImage(2,5100,0,100,500)
+for i = 1, 10000 do
+  local w = math.floor(50*love.math.random(2,3))
+  local x = 10000 + i*400 + w
+  local h = math.floor(50*love.math.random(1,4))
+  collisions.addImage(4,x,0,w,h)
+end
+
 
 function love.draw()
   -- motionless drawing
@@ -95,16 +110,22 @@ function love.draw()
   -- ipairs skips the hash parts of the table and just does the numerical indexes
   love.graphics.setColor(255,0,0)
   for key, rectangle in ipairs(hurt) do
-    love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
+    if rectangle.x > game.scroll-750 and rectangle.x < game.scroll+1500 then
+      love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
+    end
   end
+  love.graphics.setColor(255,255,255,255)
   for key, image in ipairs(visuals) do
-    love.graphics.setColor(255,255,255,255)
-    love.graphics.draw(image.i.i,image.x,image.y,0,
-      image.w/image.i.iw, image.h/image.i.ih)
+    if image.x > game.scroll-750 and image.x < game.scroll+1500 then
+      love.graphics.draw(image.i.i,image.x,image.y,0,
+        image.w/image.i.iw, image.h/image.i.ih)
+    end
   end
+  love.graphics.setColor(0,0,0,50)
   for key, rectangle in ipairs(collisions) do
-    love.graphics.setColor(0,0,0,50)
-    love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
+    if rectangle.x > game.scroll-750 and rectangle.x < game.scroll+1500 then
+      love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
+    end
   end
   love.graphics.setColor(0,0,0,255)
   love.graphics.rectangle("line",player.x,player.y,player.w,player.h)
