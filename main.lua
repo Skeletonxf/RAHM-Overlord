@@ -7,6 +7,7 @@ function love.load()
 	objectExample = exampleClass.new()
 	example.someUsefulThing()
 	objectExample:sayHi()
+	love.window.setMode(1500, 900)
 end
 
 local rectangles = {}
