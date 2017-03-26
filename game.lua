@@ -17,7 +17,7 @@ end
 local scroll = 0
 local scrollRate = 50
 
-local jumpPhases = {500,3000,7500,22500,25500,33400,10000000000000000000}
+local jumpPhases = {500,3000,7500,22500,25500,30050,10000000000000000000}
 local jumps = 1
 
 function game.softReset()

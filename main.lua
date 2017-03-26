@@ -54,8 +54,6 @@ end
 
 function love.load()
   love.window.setMode(1500, screenY)
-  -- zerobrane debugging
-  if arg[#arg] == "-debug" then require("mobdebug").start() end
   love.graphics.setLineWidth(5)
   love.window.setTitle("Tour of the Americas")
   startGameWriter = typewriter.new(require("gametext"))
@@ -128,10 +126,9 @@ function collisions.addImage(i,x,y,w,h)
   end
 end
 
-local function addCar(x,y,w,h)
-  cars[#cars+1] = car.new(collisions, hurt, visuals, x, y, w, h)
+local function addCar(x,y,w,h,s)
+  cars[#cars+1] = car.new(collisions, hurt, visuals, x, y, w, h, s)
 end
-
 love.math.setRandomSeed(12345)
 for i = 1, 10 do
   local h = math.floor(50*love.math.random(2,7))
@@ -194,9 +191,14 @@ collisions.addImage(5,32050,0,50,250)
 collisions.addImage(5,32400,0,100,350)
 local runGame = true
 local alive = true
-addCar(33000,-25,400,200)
+for i = 1, 50 do
+  collisions.addImage(4,33000+i*50,0,25,100)
+end
+addCar(33000,-25,400,200,800)
+addCar(33500,-25,300,150,300)
+addCar(34500,-25,400,250,500)
 
-function love.draw()d
+function love.draw()
   -- motionless drawing
   love.graphics.setColor(255,255,255)
   love.graphics.draw(background)

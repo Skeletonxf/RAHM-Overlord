@@ -10,7 +10,7 @@ carMetaTable.__index = carMetaTable
 -- this method
 function carMetaTable:update(dt, onScreen, offLeft)
   if onScreen then
-    self.x = self.x + -800*dt
+    self.x = self.x + -self.speed*dt
   elseif offLeft then
     self.x = self.startX
   end
@@ -25,7 +25,7 @@ end
 
 local carTable = {}
 
-function carTable.new(collisions, hurt, visuals, x, y, w, h)
+function carTable.new(collisions, hurt, visuals, x, y, w, h, speed)
   local car = {}
   setmetatable(car,carMetaTable)
   car.x = x
@@ -33,6 +33,8 @@ function carTable.new(collisions, hurt, visuals, x, y, w, h)
   car.y = y
   car.w = w
   car.h = h
+  print(speed)
+  car.speed = speed
   collisions.add(x,y,w,(3*h)/4)
   car.bodyIndex = #collisions
   collisions.add(x+(w/3),y,(2*w)/3,h)
