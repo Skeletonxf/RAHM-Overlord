@@ -17,13 +17,13 @@ addImage("skyscaperTall.png")
 addImage("skyscaperWide.png")
 addImage("cactus.png")
 addImage("cactusBig.png")
+addImage("cuart.png")
 
 local hurt = {}
 -- add a rectangle with x and y being bottom left position in screen
 function hurt.add(xPos,yPos,width,height)
   hurt[#hurt+1] = {x=xPos,y=screenY-yPos-height-100,w=width,h=height}
 end
---hurt.add(550,0,200,400)
 
 local collisions = {}
 function collisions.add(xPos,yPos,width,height)
@@ -35,6 +35,7 @@ local backgrounds = {}
 backgrounds[1] = love.graphics.newImage("VanB.png")
 backgrounds[2] = love.graphics.newImage("SanFranB.png")
 backgrounds[3] = love.graphics.newImage("ArizonaB.png")
+backgrounds[4] = love.graphics.newImage("NewMexicoB.png")
 local current = 1
 function backgrounds.nextBackground()
   current = current + 1
@@ -49,6 +50,7 @@ function love.load()
   love.window.setTitle("Tour of the Americas")
   startGameWriter = typewriter.new(require("gametext"))
   startGameWriter.specialDelays={["."]=0.12,["-"]=0.08}
+  startGameWriter.defaultTime = 0.03
   love.graphics.setNewFont(28)
   game.giveTables(collisions, player, backgrounds, hurt)
   background = backgrounds[1]
@@ -67,12 +69,30 @@ function collisions.addImage(i,x,y,w,h)
     visuals[#visuals+1] = {i=motionImages[i],x=x,y=screenY-y-h-100,w=w,h=h}
     collisions.add(x,y,w,h)
   end
-  if i == 4 then
+  if i == 4 or i == 5 then
     visuals[#visuals+1] = {i=motionImages[i],x=x,y=screenY-y-h-100,w=w,h=h}
     hurt.add(x+((5*w)/12),y,w/4,(23*h)/24)
     hurt.add(x+(w/12),y+((15*h)/48),(4*w)/5,h/18)
     hurt.add(x+((25*h)/72),y+((5*h)/24),w/12,h/8)
     hurt.add(x+((w)/18),y+((5*h)/12),w/5,h/5)
+  end
+  if i == 6 then
+    visuals[#visuals+1] = {i=motionImages[i],x=x,y=screenY-y-h-100,w=w,h=h}
+    collisions.add(x,y+(h/15),w/20,h/10)
+    collisions.add(x+(w/15),y+((2*h)/20),w/20,h/10)
+    collisions.add(x+((2*w)/15),y+((3*h)/20),w/20,h/10)
+    collisions.add(x+((3*w)/15),y+((4*h)/20),w/20,h/10)
+    collisions.add(x+((4*w)/15),y+((5*h)/20),w/20,h/10)
+    collisions.add(x+((5*w)/15),y+((6*h)/20),w/20,h/10)
+    collisions.add(x+((6*w)/15),y+((1*h)/20),w/20,h/10+((5*h)/20))
+    collisions.add(x+((7*w)/15),y+((2*h)/20),w/20,h/10+((5*h)/20))
+    collisions.add(x+((8*w)/15),y+((3*h)/20),w/20,h/10+((5*h)/20))
+    collisions.add(x+((9*w)/15),y+((4*h)/20),w/20,h/10+((5*h)/20))
+    collisions.add(x+((10*w)/15),y+((5*h)/20),w/20,h/10+((5*h)/20))
+    collisions.add(x+((11*w)/15),y+((6*h)/20),w/20,h/10+((5*h)/20))
+    collisions.add(x+((12*w)/15),y+((7*h)/20),w/20,h/10+((5*h)/20))
+    collisions.add(x+((13*w)/15),y+((8*h)/20),w/20,h/10+((5*h)/20))
+    collisions.add(x+((14*w)/15),y+((9*h)/20),w/20,h/10+((5*h)/20))
   end
 end
 
@@ -120,6 +140,8 @@ collisions.addImage(4,14800,0,w,h)
 collisions.addImage(4,17850,0,w,h)
 collisions.addImage(4,19400,0,w,h)
 collisions.addImage(4,21250,0,w,h)
+collisions.addImage(6,22500,0,600,200)
+
 
 local runGame = true
 local alive = true
@@ -163,8 +185,8 @@ end
 -- dt is time passed since last frame in seconds
 function love.update(dt)
   if dt > 0.5 then return end
-  startGameWriter:update(dt)
   if runGame then
+    startGameWriter:update(dt)
     alive = game.update(dt)
     if alive == nil then alive = true end
     if alive == "YOU DIED" then
@@ -172,6 +194,9 @@ function love.update(dt)
     elseif alive == "CACTI EVEN HURT OVERLOARDS" then
       runGame = false
     end
+  end
+  if love.keyboard.isDown("i") then
+    runGame = true
   end
   if not alive then
     runGame = false

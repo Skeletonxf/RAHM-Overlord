@@ -15,18 +15,22 @@ end
 local scroll = 0
 local scrollRate = 50
 
-local jumpPhases = {3000,7500,10000000000000000000}
+local jumpPhases = {3000,7500,22500,10000000000000000000}
 local jumps = 0
 
 function game.update(dt)
-  if love.keyboard.isDown(",") then
+  if love.keyboard.isDown(".") then
     scroll = scroll + 600*dt
-  elseif love.keyboard.isDown(".") then
+  elseif love.keyboard.isDown(",") then
     scroll = scroll - 600*dt
+  elseif love.keyboard.isDown("l") then
+    scroll = scroll + 1800*dt
+  elseif love.keyboard.isDown("k") then
+    scroll = scroll - 1800*dt
   else
     if not love.keyboard.isDown("o") then
       scrollRate = (300+(((scroll^(1/2))+100)))*dt
-      scroll = scroll + scrollRate --Rate*dt
+      scroll = scroll + scrollRate
     end
   end
   game.scroll = scroll
