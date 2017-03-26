@@ -1,6 +1,8 @@
 local typewriter = require("typewriter")
 local game = require("game")
---local car = require("car")
+local car = require("car")
+local inspect = require "inspect"
+local cars = {}
 local screenY = 900
 
 local player = {x=1000,h=150,w=80,y=300,dy=0}
@@ -20,6 +22,7 @@ addImage("images/cactus.png")
 addImage("images/cactusBig.png")
 addImage("images/cuart.png")
 addImage("images/cuart.png") -- for flipped
+addImage("images/car.png")
 
 local hurt = {}
 -- add a rectangle with x and y being bottom left position in screen
@@ -59,7 +62,7 @@ function love.load()
   startGameWriter.specialDelays={["."]=0.12,["-"]=0.08}
   startGameWriter.defaultTime = 0.03
   love.graphics.setNewFont(28)
-  game.giveTables(collisions, player, backgrounds, hurt)
+  game.giveTables(collisions, player, backgrounds, hurt, cars)
   current = game.jumps or 1
   background = backgrounds[current]
   game.softReset()
@@ -120,10 +123,13 @@ function collisions.addImage(i,x,y,w,h)
     collisions.addF(x-((14*w)/15),y+((8*h)/20),w/20,h/10+((5*h)/20))
     collisions.addF(x-((15*w)/15),y+((9*h)/20),w/20,h/10+((5*h)/20))
   end
+  if i == 8 then
+    visuals[#visuals+1] = {i=motionImages[i],x=x,y=screenY-y-h-100,w=w,h=h}
+  end
 end
 
 local function addCar(x,y,w,h)
-  car = car.new(collisions, hurt, x, y, w, h)
+  cars[#cars+1] = car.new(collisions, hurt, visuals, x, y, w, h)
 end
 
 love.math.setRandomSeed(12345)
@@ -188,8 +194,9 @@ collisions.addImage(5,32050,0,50,250)
 collisions.addImage(5,32400,0,100,350)
 local runGame = true
 local alive = true
+addCar(33000,-25,400,200)
 
-function love.draw()
+function love.draw()d
   -- motionless drawing
   love.graphics.setColor(255,255,255)
   love.graphics.draw(background)
@@ -209,20 +216,20 @@ function love.draw()
         love.graphics.draw(image.i.i,image.x,image.y,0,
           -image.w/image.i.iw, image.h/image.i.ih)
       else
-        love.graphics.draw(image.i.i,image.x,image.y,0,
+           love.graphics.draw(image.i.i,image.x,image.y,0,
           image.w/image.i.iw, image.h/image.i.ih)
       end
     end
   end
   love.graphics.setColor(0,0,0,50)
   for key, rectangle in ipairs(collisions) do
-    if rectangle.x > game.scroll-750 and rectangle.x < game.scroll+1500 then
+    if rectangle.x > game.scroll-750 and rectangle.x < game.scroll+2250 then
       love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
     end
   end
   love.graphics.setColor(255,0,0,25)
   for key, rectangle in ipairs(hurt) do
-    if rectangle.x > game.scroll-750 and rectangle.x < game.scroll+1500 then
+    if rectangle.x > game.scroll-750 and rectangle.x < game.scroll+2250 then
       love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
     end
   end

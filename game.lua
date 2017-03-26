@@ -4,12 +4,14 @@ local collisions
 local player
 local backgrounds
 local hurt
+local cars
 
-function game.giveTables(c, p, b, h)
+function game.giveTables(c, p, b, h, ca)
   collisions = c
   player = p
   backgrounds = b
   hurt = h
+  cars = ca
 end
 
 local scroll = 0
@@ -21,6 +23,9 @@ local jumps = 1
 function game.softReset()
   scroll = jumpPhases[jumps] - 500
   player.x = scroll + 300
+  for k, car in ipairs(cars) do
+    car:reset()
+  end
 end
 
 function game.update(dt)
@@ -38,11 +43,11 @@ function game.update(dt)
       scroll = scroll + scrollRate
     end
   end
-  
+
   if love.keyboard.isDown("o") and love.keyboard.isDown("4") then
     scroll = 30000
   end
-  
+
   game.scroll = scroll
 
   if scroll > jumpPhases[jumps+1]-750 then  
@@ -107,13 +112,19 @@ function game.update(dt)
   local canMovePlayerRight = true
 
   if not love.keyboard.isDown("o") then
+    for key, car in ipairs(cars) do
+      car:update(dt,(car.x > game.scroll-750) and (car.x < game.scroll+2250), (car.x > game.scroll-750))
+    end
+  end
+
+  if not love.keyboard.isDown("o") then
     for key, collision in ipairs(collisions) do
       if ((player.y + player.h) > collision.y) then
         -- player vertically in line with a collision
         if ((player.x + player.w) > collision.x and player.x < (collision.x + collision.w)) then
           -- player inside a collision
           local differenceBetweenTopOfRectangle = math.abs((player.y + player.h) - collision.y)
-          
+
           local gapOnLeftSide = (player.x + player.w) - collision.x
           local gapOnRightSide = player.x - (collision.x + collision.w)
 
