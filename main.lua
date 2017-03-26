@@ -23,6 +23,7 @@ addImage("images/cactusBig.png")
 addImage("images/cuart.png")
 addImage("images/cuart.png") -- for flipped
 addImage("images/car.png")
+addImage("images/wall.png")
 
 local hurt = {}
 -- add a rectangle with x and y being bottom left position in screen
@@ -124,6 +125,10 @@ function collisions.addImage(i,x,y,w,h)
   if i == 8 then
     visuals[#visuals+1] = {i=motionImages[i],x=x,y=screenY-y-h-100,w=w,h=h}
   end
+  if i == 9 then
+    visuals[#visuals+1] = {i=motionImages[i],x=x,y=screenY-y-h-100,w=w,h=h}
+    collisions.add(x,y,w,h)
+  end
 end
 
 local function addCar(x,y,w,h,s)
@@ -195,8 +200,14 @@ for i = 1, 50 do
   collisions.addImage(4,33000+i*50,0,25,100)
 end
 addCar(33000,-25,400,200,800)
-addCar(33500,-25,300,150,300)
-addCar(34500,-25,400,250,500)
+addCar(33200,-25,500,250,100)
+addCar(34500,-25,500,250,500)
+addCar(34700,-25,500,250,300)
+addCar(35600,-25,500,250,200)
+addCar(35550,-25,500,250,400)
+addCar(35700,-25,500,250,0)
+-- wall
+collisions.addImage(9,36050,0,100,600)
 
 function love.draw()
   -- motionless drawing
@@ -254,7 +265,8 @@ function love.update(dt)
   if love.keyboard.isDown("i") then
     runGame = true
   end
-  if not alive then
+  if game.scroll > 37000 then
     runGame = false
+    alive = "YOU WIN"
   end
 end
