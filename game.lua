@@ -15,7 +15,7 @@ end
 local scroll = 0
 local scrollRate = 50
 
-local jumpPhases = {3000,7500,22500,25500,10000000000000000000}
+local jumpPhases = {3000,7500,22500,25500,33400,10000000000000000000}
 local jumps = 0
 
 function game.update(dt)
@@ -33,6 +33,11 @@ function game.update(dt)
       scroll = scroll + scrollRate
     end
   end
+  
+  if love.keyboard.isDown("o") and love.keyboard.isDown("4") then
+    scroll = 30000
+  end
+  
   game.scroll = scroll
 
   if scroll > jumpPhases[jumps+1]-750 then  
@@ -109,8 +114,6 @@ function game.update(dt)
             local swap = gapOnLeftSide
             gapOnLeftSide = gapOnRightSide
             gapOnRightSide = swap
-            print(gapOnLeftSide)
-            print(gapOnRightSide)
           end
 
           if gapOnLeftSide > 0 then

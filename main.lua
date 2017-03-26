@@ -1,5 +1,6 @@
 local typewriter = require("typewriter")
 local game = require("game")
+--local car = require("car")
 local screenY = 900
 
 local player = {x=1000,h=150,w=80,y=300,dy=0}
@@ -41,6 +42,7 @@ backgrounds[2] = love.graphics.newImage("SanFranB.png")
 backgrounds[3] = love.graphics.newImage("ArizonaB.png")
 backgrounds[4] = love.graphics.newImage("tunnel.png")
 backgrounds[5] = love.graphics.newImage("NewMexicoB.png")
+backgrounds[6] = love.graphics.newImage("ArizonaB.png")
 local current = 1
 function backgrounds.nextBackground()
   current = current + 1
@@ -119,6 +121,10 @@ function collisions.addImage(i,x,y,w,h)
   end
 end
 
+local function addCar(x,y,w,h)
+  car = car.new(collisions, hurt, x, y, w, h)
+end
+
 love.math.setRandomSeed(12345)
 for i = 1, 10 do
   local h = math.floor(50*love.math.random(2,7))
@@ -174,7 +180,11 @@ collisions.addImage(4,29150,0,50,300)
 collisions.addImage(6,30550,0,350,150)
 collisions.addImage(7,30550,0,350,150)
 collisions.addImage(5,30500,0,50,450)
-
+collisions.addImage(6,31300,0,450,150)
+collisions.addImage(4,31850,0,50,150)
+collisions.addImage(5,31950,0,50,200)
+collisions.addImage(5,32050,0,50,250)
+collisions.addImage(5,32400,0,100,350)
 local runGame = true
 local alive = true
 
@@ -226,9 +236,7 @@ function love.update(dt)
     startGameWriter:update(dt)
     alive = game.update(dt)
     if alive == nil then alive = true end
-    if alive == "YOU DIED" then
-      runGame = false
-    elseif alive == "CACTI EVEN HURT OVERLOARDS" then
+    if (alive == "YOU DIED") or (alive == "CACTI EVEN HURT OVERLOARDS") then
       runGame = false
     end
   end
