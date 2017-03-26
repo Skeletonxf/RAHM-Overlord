@@ -179,6 +179,6 @@ function game.update(dt)
     return "YOU DIED"
   end
   
-  player.inAir = playerOnRectangle
+  player.inAir = playerCanJump
 end
 return game
