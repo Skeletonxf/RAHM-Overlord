@@ -4,8 +4,13 @@ local car = require("car")
 local inspect = require "inspect"
 local cars = {}
 local screenY = 900
-
-local player = {x=1000,h=150,w=80,y=300,dy=0}
+local playerSide = love.graphics.newImage("images/NightKing.png")
+local playerSideW = playerSide:getWidth()
+local playerSideH = playerSide:getHeight()
+local playerAir = love.graphics.newImage("images/nightKingJump.png")
+local playerAirW = playerAir:getWidth()
+local playerAirH = playerAir:getHeight()
+local player = {x=1000,h=150,w=60,y=300,dy=0}
 
 local background
 local startGameWriter
@@ -229,7 +234,7 @@ function love.draw()
         love.graphics.draw(image.i.i,image.x,image.y,0,
           -image.w/image.i.iw, image.h/image.i.ih)
       else
-           love.graphics.draw(image.i.i,image.x,image.y,0,
+        love.graphics.draw(image.i.i,image.x,image.y,0,
           image.w/image.i.iw, image.h/image.i.ih)
       end
     end
@@ -246,8 +251,14 @@ function love.draw()
       love.graphics.rectangle("line",rectangle.x,rectangle.y,rectangle.w,rectangle.h)
     end
   end
-  love.graphics.setColor(0,0,0,255)
+  love.graphics.setColor(0,0,0,25)
   love.graphics.rectangle("line",player.x,player.y,player.w,player.h)
+  love.graphics.setColor(255,255,255,255)
+  if player.inAir then
+    love.graphics.draw(playerSide, player.x, player.y, 0, player.w/playerSideW, player.h/playerSideH)
+  else
+    love.graphics.draw(playerAir, player.x - (player.w/2), player.y, 0, 2*(player.w/playerAirW), player.h/playerAirH)
+  end
   love.graphics.pop()
 end
 -- dt is time passed since last frame in seconds

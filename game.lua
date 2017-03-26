@@ -178,5 +178,7 @@ function game.update(dt)
   if player.x < scroll then
     return "YOU DIED"
   end
+  
+  player.inAir = playerOnRectangle
 end
 return game
