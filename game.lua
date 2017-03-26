@@ -15,8 +15,13 @@ end
 local scroll = 0
 local scrollRate = 50
 
-local jumpPhases = {3000,7500,22500,25500,33400,10000000000000000000}
-local jumps = 0
+local jumpPhases = {500,3000,7500,22500,25500,33400,10000000000000000000}
+local jumps = 1
+
+function game.softReset()
+  scroll = jumpPhases[jumps] - 500
+  player.x = scroll + 300
+end
 
 function game.update(dt)
   if love.keyboard.isDown(".") then
@@ -44,6 +49,8 @@ function game.update(dt)
     jumps = jumps + 1
     backgrounds.nextBackground()
   end
+
+  game.jumps = jumps
 
   local playerCanJump = player.y == 650
   local playerOnRectangle = false

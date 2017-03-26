@@ -13,13 +13,13 @@ local function addImage(file)
   local i = love.graphics.newImage(file)
   motionImages[#motionImages+1] = {i=i,iw=i:getWidth(),ih=i:getHeight()}
 end
-addImage("mountainVanBScaled.png")
-addImage("skyscaperTall.png")
-addImage("skyscaperWide.png")
-addImage("cactus.png")
-addImage("cactusBig.png")
-addImage("cuart.png")
-addImage("cuart.png") -- for flipped
+addImage("images/mountainVanBScaled.png")
+addImage("images/skyscaperTall.png")
+addImage("images/skyscaperWide.png")
+addImage("images/cactus.png")
+addImage("images/cactusBig.png")
+addImage("images/cuart.png")
+addImage("images/cuart.png") -- for flipped
 
 local hurt = {}
 -- add a rectangle with x and y being bottom left position in screen
@@ -37,12 +37,12 @@ end
 local visuals = {}
 
 local backgrounds = {}
-backgrounds[1] = love.graphics.newImage("VanB.png")
-backgrounds[2] = love.graphics.newImage("SanFranB.png")
-backgrounds[3] = love.graphics.newImage("ArizonaB.png")
-backgrounds[4] = love.graphics.newImage("tunnel.png")
-backgrounds[5] = love.graphics.newImage("NewMexicoB.png")
-backgrounds[6] = love.graphics.newImage("ArizonaB.png")
+backgrounds[1] = love.graphics.newImage("images/VanB.png")
+backgrounds[2] = love.graphics.newImage("images/SanFranB.png")
+backgrounds[3] = love.graphics.newImage("images/ArizonaB.png")
+backgrounds[4] = love.graphics.newImage("images/tunnel.png")
+backgrounds[5] = love.graphics.newImage("images/NewMexicoB.png")
+backgrounds[6] = love.graphics.newImage("images/ArizonaB.png")
 local current = 1
 function backgrounds.nextBackground()
   current = current + 1
@@ -60,8 +60,9 @@ function love.load()
   startGameWriter.defaultTime = 0.03
   love.graphics.setNewFont(28)
   game.giveTables(collisions, player, backgrounds, hurt)
-  background = backgrounds[1]
-  current = 1
+  current = game.jumps or 1
+  background = backgrounds[current]
+  game.softReset()
 end
 
 
@@ -237,7 +238,8 @@ function love.update(dt)
     alive = game.update(dt)
     if alive == nil then alive = true end
     if (alive == "YOU DIED") or (alive == "CACTI EVEN HURT OVERLOARDS") then
-      runGame = false
+      --runGame = false
+      love.load()
     end
   end
   if love.keyboard.isDown("i") then
