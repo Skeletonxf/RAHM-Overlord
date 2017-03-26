@@ -15,7 +15,7 @@ end
 local scroll = 0
 local scrollRate = 50
 
-local jumpPhases = {3000,7500,22500,10000000000000000000}
+local jumpPhases = {3000,7500,22500,25500,10000000000000000000}
 local jumps = 0
 
 function game.update(dt)
@@ -24,9 +24,9 @@ function game.update(dt)
   elseif love.keyboard.isDown(",") then
     scroll = scroll - 600*dt
   elseif love.keyboard.isDown("l") then
-    scroll = scroll + 2800*dt
+    scroll = scroll + 4800*dt
   elseif love.keyboard.isDown("k") then
-    scroll = scroll - 2800*dt
+    scroll = scroll - 4800*dt
   else
     if not love.keyboard.isDown("o") then
       scrollRate = (300+(((scroll^(1/2))+100)))*dt
@@ -101,9 +101,17 @@ function game.update(dt)
         if ((player.x + player.w) > collision.x and player.x < (collision.x + collision.w)) then
           -- player inside a collision
           local differenceBetweenTopOfRectangle = math.abs((player.y + player.h) - collision.y)
-
+          
           local gapOnLeftSide = (player.x + player.w) - collision.x
           local gapOnRightSide = player.x - (collision.x + collision.w)
+
+          if collision.f then
+            local swap = gapOnLeftSide
+            gapOnLeftSide = gapOnRightSide
+            gapOnRightSide = swap
+            print(gapOnLeftSide)
+            print(gapOnRightSide)
+          end
 
           if gapOnLeftSide > 0 then
             -- player in left wall

@@ -18,6 +18,7 @@ addImage("skyscaperWide.png")
 addImage("cactus.png")
 addImage("cactusBig.png")
 addImage("cuart.png")
+addImage("cuart.png") -- for flipped
 
 local hurt = {}
 -- add a rectangle with x and y being bottom left position in screen
@@ -29,13 +30,17 @@ local collisions = {}
 function collisions.add(xPos,yPos,width,height)
   collisions[#collisions+1] = {x=xPos,y=screenY-yPos-height-100,w=width,h=height}
 end
+function collisions.addF(xPos,yPos,width,height)
+  collisions[#collisions+1] = {x=xPos,y=screenY-yPos-height-100,w=width,h=height,f=true}
+end
 local visuals = {}
 
 local backgrounds = {}
 backgrounds[1] = love.graphics.newImage("VanB.png")
 backgrounds[2] = love.graphics.newImage("SanFranB.png")
 backgrounds[3] = love.graphics.newImage("ArizonaB.png")
-backgrounds[4] = love.graphics.newImage("NewMexicoB.png")
+backgrounds[4] = love.graphics.newImage("tunnel.png")
+backgrounds[5] = love.graphics.newImage("NewMexicoB.png")
 local current = 1
 function backgrounds.nextBackground()
   current = current + 1
@@ -94,6 +99,24 @@ function collisions.addImage(i,x,y,w,h)
     collisions.add(x+((13*w)/15),y+((8*h)/20),w/20,h/10+((5*h)/20))
     collisions.add(x+((14*w)/15),y+((9*h)/20),w/20,h/10+((5*h)/20))
   end
+  if i == 7 then
+    visuals[#visuals+1] = {f=true,i=motionImages[i],x=x,y=screenY-y-h-100,w=w,h=h}
+    collisions.addF(x-(w/15),y+(h/15),w/20,h/10)
+    collisions.addF(x-((2*w)/15),y+((2*h)/20),w/20,h/10)
+    collisions.addF(x-((3*w)/15),y+((3*h)/20),w/20,h/10)
+    collisions.addF(x-((4*w)/15),y+((4*h)/20),w/20,h/10)
+    collisions.addF(x-((5*w)/15),y+((5*h)/20),w/20,h/10)
+    collisions.addF(x-((6*w)/15),y+((6*h)/20),w/20,h/10)
+    collisions.addF(x-((7*w)/15),y+((1*h)/20),w/20,h/10+((5*h)/20))
+    collisions.addF(x-((8*w)/15),y+((2*h)/20),w/20,h/10+((5*h)/20))
+    collisions.addF(x-((9*w)/15),y+((3*h)/20),w/20,h/10+((5*h)/20))
+    collisions.addF(x-((10*w)/15),y+((4*h)/20),w/20,h/10+((5*h)/20))
+    collisions.addF(x-((11*w)/15),y+((5*h)/20),w/20,h/10+((5*h)/20))
+    collisions.addF(x-((12*w)/15),y+((6*h)/20),w/20,h/10+((5*h)/20))
+    collisions.addF(x-((13*w)/15),y+((7*h)/20),w/20,h/10+((5*h)/20))
+    collisions.addF(x-((14*w)/15),y+((8*h)/20),w/20,h/10+((5*h)/20))
+    collisions.addF(x-((15*w)/15),y+((9*h)/20),w/20,h/10+((5*h)/20))
+  end
 end
 
 love.math.setRandomSeed(12345)
@@ -140,9 +163,17 @@ collisions.addImage(5,14800,0,w,h)
 collisions.addImage(5,17850,0,w,h)
 collisions.addImage(5,19400,0,w,h)
 collisions.addImage(4,21250,0,w,h)
-collisions.addImage(6,22500,0,600,200)
-collisions.addImage(4,23250,0,100,400)
-collisions.addImage(4,23650,0,50,200)
+collisions.addImage(6,26500,0,600,200)
+collisions.addImage(4,27250,0,100,400)
+collisions.addImage(4,27650,0,50,200)
+collisions.addImage(6,28150,0,500,200)
+collisions.addImage(4,29000,0,50,300)
+collisions.addImage(6,28700,0,150,50)
+collisions.addImage(6,29300,0,400,200)
+collisions.addImage(4,29150,0,50,300)
+collisions.addImage(6,30550,0,350,150)
+collisions.addImage(7,30550,0,350,150)
+collisions.addImage(5,30500,0,50,450)
 
 local runGame = true
 local alive = true
@@ -162,9 +193,14 @@ function love.draw()
   -- ipairs skips the hash parts of the table and just does the numerical indexes
   love.graphics.setColor(255,255,255,255)
   for key, image in ipairs(visuals) do
-    if image.x > game.scroll-750 and image.x < game.scroll+1500 then
-      love.graphics.draw(image.i.i,image.x,image.y,0,
-        image.w/image.i.iw, image.h/image.i.ih)
+    if image.x > game.scroll-750 and image.x < game.scroll+2250 then
+      if image.f then
+        love.graphics.draw(image.i.i,image.x,image.y,0,
+          -image.w/image.i.iw, image.h/image.i.ih)
+      else
+        love.graphics.draw(image.i.i,image.x,image.y,0,
+          image.w/image.i.iw, image.h/image.i.ih)
+      end
     end
   end
   love.graphics.setColor(0,0,0,50)
