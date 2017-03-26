@@ -24,9 +24,9 @@ function game.update(dt)
   elseif love.keyboard.isDown(",") then
     scroll = scroll - 600*dt
   elseif love.keyboard.isDown("l") then
-    scroll = scroll + 1800*dt
+    scroll = scroll + 2800*dt
   elseif love.keyboard.isDown("k") then
-    scroll = scroll - 1800*dt
+    scroll = scroll - 2800*dt
   else
     if not love.keyboard.isDown("o") then
       scrollRate = (300+(((scroll^(1/2))+100)))*dt

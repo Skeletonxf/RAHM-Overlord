@@ -135,13 +135,14 @@ end
 local h = 250
 local w = 100
 collisions.addImage(4,12400,0,w,200)
-collisions.addImage(4,14150,0,w,h)
-collisions.addImage(4,14800,0,w,h)
-collisions.addImage(4,17850,0,w,h)
-collisions.addImage(4,19400,0,w,h)
+collisions.addImage(5,14150,0,w,h)
+collisions.addImage(5,14800,0,w,h)
+collisions.addImage(5,17850,0,w,h)
+collisions.addImage(5,19400,0,w,h)
 collisions.addImage(4,21250,0,w,h)
 collisions.addImage(6,22500,0,600,200)
-
+collisions.addImage(4,23250,0,100,400)
+collisions.addImage(4,23650,0,50,200)
 
 local runGame = true
 local alive = true
