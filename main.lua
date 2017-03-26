@@ -73,7 +73,7 @@ function collisions.addImage(i,x,y,w,h)
     visuals[#visuals+1] = {i=motionImages[i],x=x,y=screenY-y-h-100,w=w,h=h}
     hurt.add(x+((5*w)/12),y,w/4,(23*h)/24)
     hurt.add(x+(w/12),y+((15*h)/48),(4*w)/5,h/18)
-    hurt.add(x+((25*h)/72),y+((5*h)/24),w/12,h/8)
+    hurt.add(x+((59*w)/72),y+((5*h)/24),w/12,h/8)
     hurt.add(x+((w)/18),y+((5*h)/12),w/5,h/5)
   end
   if i == 6 then

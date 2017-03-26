@@ -35,7 +35,7 @@ function game.update(dt)
   end
   game.scroll = scroll
 
-  if scroll > jumpPhases[jumps+1]-750 then
+  if scroll > jumpPhases[jumps+1]-750 then  
     jumps = jumps + 1
     backgrounds.nextBackground()
   end
